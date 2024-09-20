@@ -36,18 +36,22 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-    const dispenserId = req.params.id;
-    const dispenserData = req.body;
+    const dispenserId = req.params.id; 
+    const dispenserData = req.body; 
     try {
         const result = await Dispenser.updateDispenser(req.app.locals.client, dispenserId, dispenserData);
+
         if (result.matchedCount === 0) {
             return res.status(404).json({ error: 'Dispenser not found' });
         }
+
         res.json({ message: 'Dispenser updated successfully' });
     } catch (error) {
+        console.error('Error updating dispenser:', error); 
         res.status(400).json({ error: error.message });
     }
 });
+
 
 router.delete('/:id', async (req, res) => {
     const dispenserId = req.params.id;

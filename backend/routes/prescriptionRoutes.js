@@ -1,10 +1,9 @@
 
 const express = require('express');
 const router = express.Router();
-
 const Prescription = require('../models/Prescription');
 
-router.post('/prescriptions', async (req, res) => {
+router.post('/', async (req, res) => {  
     const prescriptionData = req.body;
     try {
         const prescription = await Prescription.createPrescription(req.app.locals.client, prescriptionData);
@@ -14,7 +13,7 @@ router.post('/prescriptions', async (req, res) => {
     }
 });
 
-router.get('/prescriptions', async (req, res) => {
+router.get('/', async (req, res) => {  
     try {
         const prescriptions = await Prescription.getAllPrescriptions(req.app.locals.client);
         res.json(prescriptions);
@@ -23,7 +22,7 @@ router.get('/prescriptions', async (req, res) => {
     }
 });
 
-router.get('/prescriptions/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {  
     const id = req.params.id;
     try {
         const prescription = await Prescription.getPrescriptionById(req.app.locals.client, id);
@@ -33,7 +32,7 @@ router.get('/prescriptions/:id', async (req, res) => {
     }
 });
 
-router.put('/prescriptions/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {  
     const prescriptionId = req.params.id;
     const prescriptionData = req.body;
     try {
@@ -44,7 +43,7 @@ router.put('/prescriptions/:id', async (req, res) => {
     }
 });
 
-router.delete('/prescriptions/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {  
     const prescriptionId = req.params.id;
     try {
         const result = await Prescription.deletePrescription(req.app.locals.client, prescriptionId);
