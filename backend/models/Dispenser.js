@@ -1,7 +1,13 @@
 const { ObjectId } = require('mongodb'); 
+
 module.exports = {
     createDispenser: async (client, dispenserData) => {
         const dispensersCollection = client.db("database").collection("dispensers");
+        // Ensure each slot has a medicineName
+        dispenserData.slots = dispenserData.slots.map(slot => ({
+            ...slot,
+            medicineName: slot.medicineName || 'Unknown Medicine' // Default value if not provided
+        }));
         const result = await dispensersCollection.insertOne(dispenserData);
         return result;
     },
@@ -17,6 +23,11 @@ module.exports = {
     },
     updateDispenser: async (client, dispenserId, dispenserData) => {
         const dispensersCollection = client.db("database").collection("dispensers");
+        // Ensure each slot has a medicineName
+        dispenserData.slots = dispenserData.slots.map(slot => ({
+            ...slot,
+            medicineName: slot.medicineName || 'Unknown Medicine' // Default value if not provided
+        }));
         const result = await dispensersCollection.updateOne(
             { _id: new ObjectId(dispenserId) }, 
             { $set: dispenserData }
@@ -29,4 +40,3 @@ module.exports = {
         return result;
     },
 };
-
