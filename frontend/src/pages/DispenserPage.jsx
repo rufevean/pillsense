@@ -19,11 +19,12 @@ const DispenserPage = () => {
         name: '',
         status: '',
         slots: [
-            { pillCount: 0, medicineName: '' },
-            { pillCount: 0, medicineName: '' }
+            { pillCount: 0, medicineName: '', interval: '', nextInterval: '' },
+            { pillCount: 0, medicineName: '', interval: '', nextInterval: '' }
         ]
     });
     const [recommendations, setRecommendations] = useState({});
+    const [nextIntervals, setNextIntervals] = useState({});
 
     useEffect(() => {
         const fetchDispensers = async () => {
@@ -32,8 +33,8 @@ const DispenserPage = () => {
                 const dispensersWithSlots = response.data.map(dispenser => ({
                     ...dispenser,
                     slots: dispenser.slots && dispenser.slots.length >= 2 ? dispenser.slots : [
-                        { pillCount: 0, medicineName: '' },
-                        { pillCount: 0, medicineName: '' }
+                        { pillCount: 0, medicineName: '', interval: '', nextInterval: '' },
+                        { pillCount: 0, medicineName: '', interval: '', nextInterval: '' }
                     ]
                 }));
                 setDispensers(dispensersWithSlots);
@@ -58,17 +59,20 @@ const DispenserPage = () => {
             prevDispensers.map(dispenser =>
                 dispenser._id === dispenserId
                     ? {
-                          ...dispenser,
-                          slots: dispenser.slots ? dispenser.slots.map((slot, index) =>
-                              index === slotIndex ? { ...slot, [field]: value } : slot
-                          ) : [
-                              { pillCount: 0, medicineName: '' },
-                              { pillCount: 0, medicineName: '' }
-                          ]
-                      }
+                        ...dispenser,
+                        slots: dispenser.slots ? dispenser.slots.map((slot, index) =>
+                            index === slotIndex ? { ...slot, [field]: value } : slot
+                        ) : [
+                            { pillCount: 0, medicineName: '', interval: '', nextInterval: '' },
+                            { pillCount: 0, medicineName: '', interval: '', nextInterval: '' }
+                        ]
+                    }
                     : dispenser
             )
         );
+        if (field === 'interval') {
+            setNextInterval(dispenserId, slotIndex, value);
+        }
     };
 
     const handleNewDispenserChange = (field, value) => {
@@ -85,11 +89,14 @@ const DispenserPage = () => {
                 index === slotIndex ? { ...slot, [field]: value } : slot
             )
         }));
+        if (field === 'interval') {
+            setNextInterval('new', slotIndex, value);
+        }
     };
 
     const handleSave = async (id) => {
         const dispenserToUpdate = dispensers.find(d => d._id === id);
-        
+
         const { _id, ...updatedData } = dispenserToUpdate;
 
         try {
@@ -106,8 +113,8 @@ const DispenserPage = () => {
             const createdDispenser = {
                 ...response.data,
                 slots: response.data.slots && response.data.slots.length >= 2 ? response.data.slots : [
-                    { pillCount: 0, medicineName: '' },
-                    { pillCount: 0, medicineName: '' }
+                    { pillCount: 0, medicineName: '', interval: '', nextInterval: '' },
+                    { pillCount: 0, medicineName: '', interval: '', nextInterval: '' }
                 ]
             };
             setDispensers([...dispensers, createdDispenser]);
@@ -115,8 +122,8 @@ const DispenserPage = () => {
                 name: '',
                 status: '',
                 slots: [
-                    { pillCount: 0, medicineName: '' },
-                    { pillCount: 0, medicineName: '' }
+                    { pillCount: 0, medicineName: '', interval: '', nextInterval: '' },
+                    { pillCount: 0, medicineName: '', interval: '', nextInterval: '' }
                 ]
             });
             console.log('Dispenser created successfully');
@@ -145,6 +152,57 @@ const DispenserPage = () => {
             ...prevRecs,
             [slotIndex]: Array.isArray(recs) ? recs : []  // Ensure recs is an array
         }));
+    };
+
+    const setNextInterval = (dispenserId, slotIndex, interval) => {
+        const now = new Date();
+        let nextTime = new Date(now);
+
+        switch (interval) {
+            case '15min':
+                nextTime.setMinutes(now.getMinutes() + 15);
+                break;
+            case '30min':
+                nextTime.setMinutes(now.getMinutes() + 30);
+                break;
+            case '1hr':
+                nextTime.setHours(now.getHours() + 1);
+                break;
+            case '4hrs':
+                nextTime.setHours(now.getHours() + 4);
+                break;
+            case '6hrs':
+                nextTime.setHours(now.getHours() + 6);
+                break;
+            case '12hrs':
+                nextTime.setHours(now.getHours() + 12);
+                break;
+            case '1day':
+                nextTime.setDate(now.getDate() + 1);
+                break;
+            default:
+                nextTime = null;
+        }
+
+        setDispensers(prevDispensers =>
+            prevDispensers.map(dispenser =>
+                dispenser._id === dispenserId
+                    ? {
+                        ...dispenser,
+                        slots: dispenser.slots.map((slot, index) =>
+                            index === slotIndex ? { ...slot, nextInterval: nextTime } : slot
+                        )
+                    }
+                    : dispenser
+            )
+        );
+
+        if (nextTime) {
+            const timeout = nextTime - now;
+            setTimeout(() => {
+                alert(`Time to take your medicine for slot ${slotIndex + 1}`);
+            }, timeout);
+        }
     };
 
     return (
@@ -191,6 +249,25 @@ const DispenserPage = () => {
                                             onChange={(e) => handleSlotChange(dispenser._id, index, 'medicineName', e.target.value)}
                                         />
                                     </label>
+                                    <label>
+                                        Slot {index + 1} Interval:
+                                        <select
+                                            value={slot.interval}
+                                            onChange={(e) => handleSlotChange(dispenser._id, index, 'interval', e.target.value)}
+                                        >
+                                            <option value="">Select Interval</option>
+                                            <option value="15min">15 min</option>
+                                            <option value="30min">30 min</option>
+                                            <option value="1hr">1 hr</option>
+                                            <option value="4hrs">4 hrs</option>
+                                            <option value="6hrs">6 hrs</option>
+                                            <option value="12hrs">12 hrs</option>
+                                            <option value="1day">1 day</option>
+                                        </select>
+                                    </label>
+                                    {slot.nextInterval && (
+                                        <p>Next interval: {new Date(slot.nextInterval).toLocaleString()}</p>
+                                    )}
                                     <button onClick={() => handleGetRecommendations(slot.medicineName, `${dispenser._id}-${index}`)}>Get Recommendations</button>
                                     {Array.isArray(recommendations[`${dispenser._id}-${index}`]) && (
                                         <ul>
@@ -244,13 +321,24 @@ const DispenserPage = () => {
                                 onChange={(e) => handleNewSlotChange(index, 'medicineName', e.target.value)}
                             />
                         </label>
-                        <button onClick={() => handleGetRecommendations(slot.medicineName, `new-${index}`)}>Get Recommendations</button>
-                        {Array.isArray(recommendations[`new-${index}`]) && (
-                            <ul>
-                                {recommendations[`new-${index}`].map((rec, recIndex) => (
-                                    <li key={recIndex}>{rec}</li>
-                                ))}
-                            </ul>
+                        <label>
+                            Slot {index + 1} Interval:
+                            <select
+                                value={slot.interval}
+                                onChange={(e) => handleNewSlotChange(index, 'interval', e.target.value)}
+                            >
+                                <option value="">Select Interval</option>
+                                <option value="15min">15 min</option>
+                                <option value="30min">30 min</option>
+                                <option value="1hr">1 hr</option>
+                                <option value="4hrs">4 hrs</option>
+                                <option value="6hrs">6 hrs</option>
+                                <option value="12hrs">12 hrs</option>
+                                <option value="1day">1 day</option>
+                            </select>
+                        </label>
+                        {slot.nextInterval && (
+                            <p>Next interval: {new Date(slot.nextInterval).toLocaleString()}</p>
                         )}
                     </div>
                 ))}
