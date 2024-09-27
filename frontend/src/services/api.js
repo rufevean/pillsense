@@ -2,6 +2,20 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api';
 
+// Set up Axios interceptor to include token in headers
+axios.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 export const getUsers = () => axios.get(`${API_URL}/users`);
 export const createUser = (newUser) => axios.post(`${API_URL}/users`, newUser);
 
