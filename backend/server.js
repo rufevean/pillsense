@@ -2,6 +2,7 @@ const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
+const authenticateToken = require('./middleware/auth');
 
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -17,6 +18,9 @@ app.post('/test', (req, res) => {
     res.send('Hello World');
 });
 
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
 async function run() {
     try {
         await client.connect();
@@ -26,11 +30,9 @@ async function run() {
 
         const userRoutes = require('./routes/userRoutes');
         const dispenserRoutes = require('./routes/dispenserRoutes');
-        // Removed prescriptionRoutes import
 
-        app.use('/api/users', userRoutes);
-        app.use('/api/dispensers', dispenserRoutes);
-        // Removed prescriptionRoutes usage
+        app.use('/api/users', authenticateToken, userRoutes);
+        app.use('/api/dispensers', authenticateToken, dispenserRoutes);
 
         app.get('/', (req, res) => {
             res.json({ message: 'Welcome to the API' });
