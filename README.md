@@ -28,7 +28,6 @@ Pillsense is a smart medication management system designed to help users manage 
 ### Prerequisites
 
 - Node.js
-- npm or yarn
 - MongoDB
 #### Future Development Dependencies
 - Redis (for caching)
