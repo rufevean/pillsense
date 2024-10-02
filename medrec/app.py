@@ -10,7 +10,7 @@ CORS(app)  # Enable CORS
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
-    data = request.json
+    data =request.json
     medicine_name = data.get('medicineName')
     recommendations = get_recommendations(medicine_name, k=15)
     return jsonify(recommendations)
