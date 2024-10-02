@@ -28,7 +28,6 @@ Pillsense is a smart medication management system designed to help users manage 
 ### Prerequisites
 
 - Node.js
-- npm or yarn
 - MongoDB
 #### Future Development Dependencies
 - Redis (for caching)
@@ -36,7 +35,7 @@ Pillsense is a smart medication management system designed to help users manage 
 
 ### Backend
 
-1. Clone the repository:
+1. Fork and Clone the repository:
     ```sh
     git clone https://github.com/yourusername/pillsense.git
     cd pillsense/backend
