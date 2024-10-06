@@ -9,7 +9,7 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {
+        if (token) {``
             const decodedUser = jwtDecode(token);
             setUser(decodedUser);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (credentials) => {
-        const response = await axios.post('/api/auth/login', credentials);
+        const response = await axios.post('/auth/login', credentials);
         const token = response.data.token;
         localStorage.setItem('token', token);
         const decodedUser = jwtDecode(token);
