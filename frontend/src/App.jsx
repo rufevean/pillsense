@@ -7,10 +7,12 @@ import PrescriptionPage from './pages/PrescriptionPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { AuthProvider } from './AuthContext';
+import { HashRouter } from 'react-router-dom';
 import RequireAuth from './RequireAuth';
 
 function App() {
     return (
+        <HashRouter>
         <AuthProvider>
             <Router>
                 <Routes>
@@ -44,6 +46,7 @@ function App() {
                 </Routes>
             </Router>
         </AuthProvider>
+        </HashRouter>
     );
 }
 
