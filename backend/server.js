@@ -1,6 +1,7 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 const authenticateToken = require('./middleware/auth');
 
@@ -15,6 +16,9 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.post('/test', (req, res) => {
     console.log("Test route hit");
