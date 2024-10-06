@@ -10,7 +10,10 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+    origin:"https://pillsense-1.onrender.com",
+    credentials:true
+}));
 app.use(express.json());
 
 app.post('/test', (req, res) => {
