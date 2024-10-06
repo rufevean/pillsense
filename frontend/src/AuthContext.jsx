@@ -9,20 +9,30 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {``
-            const decodedUser = jwtDecode(token);
-            setUser(decodedUser);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        if (token) {
+            try {
+                const decodedUser = jwtDecode(token);
+                setUser(decodedUser);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            } catch (error) {
+                console.error('Invalid token:', error);
+                localStorage.removeItem('token');
+            }
         }
     }, []);
 
     const login = async (credentials) => {
-        const response = await axios.post('/auth/login', credentials);
-        const token = response.data.token;
-        localStorage.setItem('token', token);
-        const decodedUser = jwtDecode(token);
-        setUser(decodedUser);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, credentials);
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+            const decodedUser = jwtDecode(token);
+            setUser(decodedUser);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        } catch (error) {
+            console.error('Login failed:', error);
+            throw error;
+        }
     };
 
     const logout = () => {
