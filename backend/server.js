@@ -10,7 +10,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({}));
+// Configure CORS middleware
+app.use(cors({
+    origin: "https://pillsense-1.onrender.com", // Allow requests from this origin
+    credentials: true // Allow credentials (cookies, authorization headers, etc.)
+}));
+
 app.use(express.json());
 
 app.post('/test', (req, res) => {
@@ -58,4 +63,4 @@ process.on('SIGINT', async () => {
     } finally {
         process.exit();
     }
-}); 
+});
