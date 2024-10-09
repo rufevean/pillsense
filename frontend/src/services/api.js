@@ -18,7 +18,9 @@ axios.interceptors.request.use(
 
 export const getUsers = async () => {
     try {
+        console.log('Calling getUsers API');
         const response = await axios.get(`${API_URL}/users`);
+        console.log('getUsers response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch users:', error);
@@ -28,7 +30,9 @@ export const getUsers = async () => {
 
 export const createUser = async (newUser) => {
     try {
+        console.log('Calling createUser API');
         const response = await axios.post(`${API_URL}/users`, newUser);
+        console.log('createUser response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to create user:', error);
@@ -38,7 +42,9 @@ export const createUser = async (newUser) => {
 
 export const getPrescriptions = async () => {
     try {
+        console.log('Calling getPrescriptions API');
         const response = await axios.get(`${API_URL}/prescriptions`);
+        console.log('getPrescriptions response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch prescriptions:', error);
@@ -48,7 +54,9 @@ export const getPrescriptions = async () => {
 
 export const createPrescription = async (newPrescription) => {
     try {
+        console.log('Calling createPrescription API');
         const response = await axios.post(`${API_URL}/prescriptions`, newPrescription);
+        console.log('createPrescription response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to create prescription:', error);
@@ -58,7 +66,9 @@ export const createPrescription = async (newPrescription) => {
 
 export const getDispensers = async () => {
     try {
+        console.log('Calling getDispensers API');
         const response = await axios.get(`${API_URL}/dispensers`);
+        console.log('getDispensers response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch dispensers:', error);
@@ -68,7 +78,9 @@ export const getDispensers = async () => {
 
 export const createDispenser = async (newDispenser) => {
     try {
+        console.log('Calling createDispenser API');
         const response = await axios.post(`${API_URL}/dispensers`, newDispenser);
+        console.log('createDispenser response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to create dispenser:', error);
@@ -78,7 +90,9 @@ export const createDispenser = async (newDispenser) => {
 
 export const updateDispenser = async (id, updatedDispenser) => {
     try {
+        console.log('Calling updateDispenser API');
         const response = await axios.put(`${API_URL}/dispensers/${id}`, updatedDispenser);
+        console.log('updateDispenser response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to update dispenser:', error);
@@ -88,7 +102,9 @@ export const updateDispenser = async (id, updatedDispenser) => {
 
 export const deleteDispenser = async (id) => {
     try {
+        console.log('Calling deleteDispenser API');
         const response = await axios.delete(`${API_URL}/dispensers/${id}`);
+        console.log('deleteDispenser response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to delete dispenser:', error);
