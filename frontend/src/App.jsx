@@ -11,7 +11,7 @@ import RequireAuth from './RequireAuth';
 
 function App() {
     return (
-
+        <AuthProvider>
             <Router>
                 <Routes>
                     <Route path="/" element={<HomePage />} />
@@ -43,7 +43,7 @@ function App() {
                     />
                 </Routes>
             </Router>
- 
+        </AuthProvider>
     );
 }
 
