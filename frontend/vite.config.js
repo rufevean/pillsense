@@ -5,7 +5,7 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'https://pillsense.onrender.com',
+                target: 'https://pillsense.onrender.com/api',
                 changeOrigin: true,
             },
         },
