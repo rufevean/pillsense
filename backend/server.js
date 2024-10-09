@@ -18,11 +18,6 @@ app.use(cors({
 
 app.use(express.json());
 
-app.post('/test', (req, res) => {
-    console.log("Test route hit");
-    res.send('Hello World');
-});
-
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
